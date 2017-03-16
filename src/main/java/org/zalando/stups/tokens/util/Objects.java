@@ -20,7 +20,7 @@ import java.util.Collection;
 import org.apache.http.util.Args;
 
 /**
- * Basic Utilities. We know there are a lot of libs out there. <br />
+ * Basic Utilities. We know there are a lot of libs out there.
  * We just delegate to one in classpath here not to spread around the
  * dependency.
  * 
@@ -51,6 +51,27 @@ public class Objects {
 		} catch (NullPointerException e) {
 			return collection;
 		}
+		return collection;
+	}
+
+	public static <T extends CharSequence> Collection<T> noBlankEntries(String name, Collection<T> collection) {
+		name = notBlank("name", name);
+		collection = notNull(name, collection);
+		try {
+			if (collection.contains(null)) {
+				throw new IllegalArgumentException(name + " should not contain 'null'");
+			}
+			try {
+				for (T element : collection) {
+					Args.notBlank(element, name);
+				}
+			} catch (IllegalArgumentException ignore) {
+				throw new IllegalArgumentException(name + " should not contain blank elements");
+			}
+		} catch (NullPointerException e) {
+			return collection;
+		}
+
 		return collection;
 	}
 
